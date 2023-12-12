@@ -1,10 +1,10 @@
 import {Router} from 'express';
 
- const ProductManager = require("../productManager.js") ;
-
-const productManager = new ProductManager;
+const ProductManager = require("../productManager.js") ;
+import ProductManager from "../managers/productManager.js"
 
 const router = Router()
+const productManager = new ProductManager;
 
 router.get('/', async (req, res) => {
     try {
@@ -49,6 +49,7 @@ router.post('/', async (req, res) => {
 router.put('/:pid', async (req, res) => {
     try {
         const { pid } = req.params
+        
         const upd = await productManager.update(pid, req.body.updatedProduct)
         if (upd === null) {
             return res.status(400).send({
@@ -69,12 +70,11 @@ router.put('/:pid', async (req, res) => {
 router.delete('/:pid', async (req, res) => {
     try {
         const {pid} = req.params;
-        await productManager.deleteProduct(pid)
+        await productManager.deleteProduct(parseInt(pid))
         res.send('PRODUCTO ELIMINADO CORRECTAMENTE')
     } catch (error) {
         console.log(error);
         res.send(`ERROR AL ELIMINAR EL PRODUCTO CON ID ${pid}`)
     }
 })
-
-module.exports = router
+export default router;
